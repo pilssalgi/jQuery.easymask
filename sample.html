@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=1024">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+
+        <title>clipmask</title>
+    
+        <style>
+            body { 
+                margin  : 0; 
+                padding : 0;
+                width   : 800px; 
+                background-color: #333333; 
+            }
+
+            #bg { 
+                position: relative; 
+                width: 10px; 
+                height: 2000px; 
+                background-color: #f00;  
+            }
+
+            #wrap {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                left: 0;top: 0;
+                z-index: 1;
+            }
+
+            #img {
+                position: absolute;
+                width: 700px;
+                height:466px;
+                left:50%;
+                top:50%;
+                margin-left: -350px;
+                margin-top: -233px;
+            }
+
+
+        </style>
+        <script src="js/jquery-1.9.1.min.js"></script>
+        <script src="js/jquery.easymask.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var $scroll = $(scrollableNode('html', 'body')),
+                    size    = { width : 0, height : 0},
+                    scrollTotal;
+
+
+                $(window).on('resize',function(){
+                    size = windowSize();
+                    scrollTotal = 2000-size.height;
+                });   
+                $(window).trigger('resize');
+
+                $(window).on('scroll',function(){
+                    var ratio = $scroll.scrollTop()/scrollTotal;
+                    $('#img').easymask({align:"C",width:ratio*100+"%",height:'100%'},0);
+                });
+
+
+                // http://www.learningjquery.com/2007/10/improved-animated-scrolling-script-for-same-page-links#update4
+                function scrollableNode (nodes) {
+                    var i,
+                        len,
+                        node,
+                        $node,
+                        scrollable;
+                    for (i = 0, len = arguments.length; i < len; i++) {
+                        node = arguments[i],
+                        $node = $(node);
+                        if ($node.scrollTop() > 0) {
+                            return node;
+                        } else {
+                            $node.scrollTop(1);
+                            scrollable = $node.scrollTop() > 0;
+                            $node.scrollTop(0);
+                            if (scrollable) {
+                                return node;
+                            }
+                        }
+                    }
+                    return [];
+                }
+
+
+                function windowSize(){
+                    var size = { width:0,height:0};
+
+                    if (document.documentElement.clientHeight) {
+                        size.width = document.documentElement.clientWidth;
+                        size.height = document.documentElement.clientHeight;
+                    } else if (document.body.clientHeight) {
+                        size.width = document.body.clientWidth;
+                        size.height = document.body.clientHeight;
+                    } else if (window.innerHeight) {
+                        size.width = window.innerWidth;
+                        size.height = window.innerHeight;
+                    }
+
+                    return size;
+                }
+            })
+        </script>
+    </head>
+    <body>
+        <div id="bg"></div>
+        <div id="wrap">
+            <img src="img/1.jpg" id="img" width="700" height="466" alt="">
+        </div>
+        
+    </body>
+</html>
